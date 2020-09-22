@@ -18,9 +18,8 @@ public class HolaMundo {
 	}
 	
 	public static void introducirNombre() {
-		System.out.println("Introduzca su nombre: ");
 		String nombre = teclado.next();
-		System.out.println("Buenas tardes " +nombre+ ", bienvenido a Programación II");
+		System.out.println("Hola " +nombre+ ", bienvenido a Programación II y al mundo Java");
 	}
 	
 }
