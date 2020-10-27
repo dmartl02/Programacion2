@@ -29,7 +29,7 @@ import org.junit.Test;
  * @author adolfo
  *
  */
-public class MaintTest {
+public class MainTest {
 	static PrintStream out;
 	static InputStream in;
 	
