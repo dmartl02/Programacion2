@@ -7,6 +7,7 @@ public class NReinas {
 	 * Almacena el tamaño del tablero. Eso determina el número de reinas a colocar.
 	 */
 	int tamanioTablero;
+	private boolean solucionEncontrada;
 	 
  	NReinas(int numeroReinas) {
 		 tamanioTablero = numeroReinas;
@@ -102,28 +103,28 @@ public class NReinas {
 	  * @param soluciones
 	  */
 	 
-	 private boolean reinasVueltaAtras(int[] solucionParcial, int fila, ArrayList<int[]> soluciones){
-	     for (int i=0; i<tamanioTablero; i++){
+	 private void reinasVueltaAtras(int[] solucionParcial, int fila, ArrayList<int[]> soluciones){		 
+		 for (int i=0; i<tamanioTablero && !solucionEncontrada; i++){
 	         solucionParcial[fila] = i;
+	         
 	         if (!hayConflicto(solucionParcial,fila)) {
+	        	 
 	             if (fila==tamanioTablero-1){
 	                 int[] nuevaSol = new int[tamanioTablero];
+	                 
 	                 for (int j=0; j<tamanioTablero;j++) {
 	                     nuevaSol[j] = solucionParcial[j];
 	                 }
-	                 soluciones.add(nuevaSol); 
-	                 return true;
 	                 
-	             } else {
-	                if (reinasVueltaAtras(solucionParcial,fila+1,soluciones)) {
-	                	return true;
-	                }
+	                 soluciones.add(nuevaSol); 
+	                 solucionEncontrada = true;
+	                 
+	             } else { //Entra cuando no hay solucion
+	                	reinasVueltaAtras(solucionParcial,fila+1,soluciones);
+	              }	
 	                //Nota: ¿por qué no funciona simplemente return reinasVueltaAtras(solucion, fila+1, soluciones)?
-	             }
-	         }
+	         }        
 	     }
-	     
-	     return false;
 	 }
 	 
 	 
