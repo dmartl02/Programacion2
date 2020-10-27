@@ -51,8 +51,8 @@ public class NReinas {
 	         solucion[i] = -1;
 	     }
 	     
-	     reinasVueltaAtras_TodasLasSoluciones(solucion,0,solucionesEncontradas);
-	     //reinasVueltaAtras(solucion,0,soluciones);
+	     //reinasVueltaAtras_TodasLasSoluciones(solucion,0,solucionesEncontradas);
+	     reinasVueltaAtras(solucion,0,solucionesEncontradas);
      }	
 	 
 	 
@@ -128,17 +128,17 @@ public class NReinas {
 	 
 	 
 	 public static void main (String[] args){
-	     int numeroReinas = 4; //Probamos con 4 por defecto
+	     int n = 8; //Probamos con 4 por defecto
 	     
 	     if (args.length > 0) {
-	         numeroReinas = Integer.parseInt(args[0]);
+	         n = Integer.parseInt(args[0]);
 	     }
 	     
-	     NReinas nr = new NReinas(numeroReinas);
+	     NReinas nr = new NReinas(n);
 	     ArrayList<int[]> soluciones = new ArrayList<int[]>();
 	     
 	     nr.reinas(soluciones);
-	     System.out.println(nr.toStringSoluciones(soluciones));
+	     System.out.print(nr.toStringSoluciones(soluciones));
 	 }
 	
 	 
