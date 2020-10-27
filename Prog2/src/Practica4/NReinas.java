@@ -7,7 +7,7 @@ public class NReinas {
 	 * Almacena el tamaño del tablero. Eso determina el número de reinas a colocar.
 	 */
 	int tamanioTablero;
-	private boolean solucionEncontrada;
+	//private boolean haySolucion;
 	 
  	NReinas(int numeroReinas) {
 		 tamanioTablero = numeroReinas;
@@ -47,13 +47,14 @@ public class NReinas {
 	 
 	 public void reinas (ArrayList<int[]> solucionesEncontradas){
 	     int[] solucion = new int[tamanioTablero];
+	     boolean[] haySolucion = {false};
 	     
 	     for (int i=0; i<tamanioTablero;i++) {
 	         solucion[i] = -1;
 	     }
 	     
 	     //reinasVueltaAtras_TodasLasSoluciones(solucion,0,solucionesEncontradas);
-	     reinasVueltaAtras(solucion,0,solucionesEncontradas);
+	     reinasVueltaAtras(solucion,0,solucionesEncontradas,haySolucion);
      }	
 	 
 	 
@@ -88,6 +89,7 @@ public class NReinas {
 	     }
 	 }
 	 
+	 
 	 /**
 	  * Devuelve true si encuentra una solución al problema de las n-reinas a partir de la solución parcial dada en solucionParcial hasta la 
 	  * posición fila-1.  La solución la añade a soluciones.
@@ -98,13 +100,14 @@ public class NReinas {
 	  * 
 	  * Precondición: !hayConflcito(solucionParcial,i) para 0 <= i < fila y solucionParcial not nulo  y 0 <= fila < solucionParcial.length
 	  * 
-	  * @param solucionParcial solución parcial construida hasta el momento. 
-	  * @param fila fila que toca poner una nueva reina. Precondición: 0 <= fila < tam 
+	  * @param solucionParcial : solución parcial construida hasta el momento. 
+	  * @param fila : fila que toca poner una nueva reina. Precondición: 0 <= fila < tam 
 	  * @param soluciones
+	  * @param haySolucion : referencia a un objeto, nunca cambia
 	  */
 	 
-	 private void reinasVueltaAtras(int[] solucionParcial, int fila, ArrayList<int[]> soluciones){		 
-		 for (int i=0; i<tamanioTablero && !solucionEncontrada; i++){
+	 private void reinasVueltaAtras(int[] solucionParcial, int fila, ArrayList<int[]> soluciones, boolean[] haySolucion){		 
+		 for (int i=0; i<tamanioTablero && !haySolucion[0]; i++){
 	         solucionParcial[fila] = i;
 	         
 	         if (!hayConflicto(solucionParcial,fila)) {
@@ -117,10 +120,10 @@ public class NReinas {
 	                 }
 	                 
 	                 soluciones.add(nuevaSol); 
-	                 solucionEncontrada = true;
+	                 haySolucion[0] = true;
 	                 
 	             } else { //Entra cuando no hay solucion
-	                	reinasVueltaAtras(solucionParcial,fila+1,soluciones);
+	                	reinasVueltaAtras(solucionParcial,fila+1,soluciones,haySolucion);
 	              }	
 	                //Nota: ¿por qué no funciona simplemente return reinasVueltaAtras(solucion, fila+1, soluciones)?
 	         }        
@@ -129,7 +132,7 @@ public class NReinas {
 	 
 	 
 	 public static void main (String[] args){
-	     int n = 8; //Probamos con 4 por defecto
+	     int n = 6; //Probamos con 4 por defecto
 	     
 	     if (args.length > 0) {
 	         n = Integer.parseInt(args[0]);
