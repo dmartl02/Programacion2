@@ -77,7 +77,7 @@ public class NReinas {
 	   	 
 	             if (fila == tamanioTablero-1){ 
 	                 int[] nuevaSol = new int[tamanioTablero];
-	                 
+	            
 	                 for (int j=0; j<tamanioTablero;j++) {
 	                     nuevaSol[j] = solucionParcial[j];
 	                 }
