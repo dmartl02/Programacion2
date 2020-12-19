@@ -60,9 +60,8 @@ Cualquier unidad de tren que se origina fuera del tablero o cualquier configurac
 colisión se considerará incorrecta. Así  mismo  cualquier entrada que no se ajuste a las directrices indicadas se
 considerará incorrecta. En caso de entrada incorrecta, los conjuntos de simulaciones bien definidos previos al punto
 de la entrada incorrecta se procesaran de la forma habitual si se ha completado correctamente su lectura.
-Cuando se detecte una entrada incorrecta se enviará a la
-salida estándar el mensaje "Conjunto de trenes incorrecto." y no se procesará más entrada, finalizando el
-programa.
+Cuando se detecte una entrada incorrecta se enviará a la salida estándar el mensaje "Conjunto de trenes incorrecto." 
+y no se procesará más entrada, finalizando el programa.
 
 Salida
 Para cada conjunto de simulación de entrada, debe imprimir (exactamente) las siguientes líneas
