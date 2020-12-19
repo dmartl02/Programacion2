@@ -30,6 +30,7 @@ public class Tablero extends Main {
         }
 	}
 	
+	
 	public void aniadirTrenAlTablero(Tren tren) {
 		int direccion = tren.getDireccion();
 		int longitud = tren.getLongitud();
