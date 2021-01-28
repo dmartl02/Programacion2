@@ -1,4 +1,4 @@
-package Practica2Final;
+package Practica2Final_2;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -519,11 +519,13 @@ public class ControllerCreateBoard implements ActionListener {
 		Position collision;
 		Train temp;
 		
+
 		orderTrains();
 		maximumTrains = trains.size();
 
 		while (!trains.isEmpty()) {
 			temp = trains.get(index);
+			temp.move(viewCreateBoard);
 			
 			collision = new Position(temp.getPosition().getRow(), temp.getPosition().getColumn());
 			crashed = detectCollision(index);
@@ -532,8 +534,6 @@ public class ControllerCreateBoard implements ActionListener {
 				viewCreateBoard.paintCollision(collision);
 			}
 
-			temp.move(viewCreateBoard);
-			
 			if (temp.getWagons() <= 0) {
 				trains.remove(temp);
 				maximumTrains = trains.size();

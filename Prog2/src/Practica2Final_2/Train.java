@@ -1,5 +1,8 @@
+package Practica2Final_2;
 
-package Practica2Final;
+import Practica2Final.ControllerCreateBoard;
+import Practica2Final.Position;
+import Practica2Final.ViewCreateBoard;
 
 public class Train {
 	private ViewCreateBoard viewCreateBoard;

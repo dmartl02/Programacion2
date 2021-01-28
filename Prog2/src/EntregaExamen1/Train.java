@@ -1,4 +1,4 @@
-package Practica1Final;
+package EntregaExamen1;
 
 public class Train {
 	private char direction;
@@ -35,58 +35,60 @@ public class Train {
 		this.wagons = wagons;
 	}
 
+
 	public void move() {
 		int x = position.getX();
 		int y = position.getY();
 
-		switch (direction) {
+		switch(direction) {
 		case 'B':
-			if (x == 29) {
+			if(x == 29) {
 				wagons--;
 			} else {
-				position.setX(x + 1);
+				position.setX(x+1);
 			}
 
 			break;
 
 		case 'A':
-			if (x == 0) {
+			if(x == 0) {
 				wagons--;
 			} else {
-				position.setX(x - 1);
+				position.setX(x-1);
 			}
+
 			break;
 
 		case 'I':
-			if (y == 0) {
+			if(y == 0) {
 				wagons--;
 			} else {
-				position.setY(y - 1);
+				position.setY(y-1);
 			}
 
 			break;
 
 		case 'D':
-			if (y == 29) {
+			if(y == 29) {
 				wagons--;
 			} else {
-				position.setY(y + 1);
+				position.setY(y+1);
 			}
 
 			break;
 		}
 	}
 
-	
-	public void moveWhenCollision() { 
+
+	public void moveWhenCollision() {
 		wagons--;
-		
-		switch (direction) {
+
+		switch(direction){
 		case 'B':
 			position.setX(position.getX() + wagons);
 
-			if(position.getX() > 29) {
-				while((position.getX() > 29) && (wagons > 0)) {
+			if(position.getX() > 29){
+				while((position.getX() > 29) && (wagons > 0)){
 					position.setX(position.getX() - 1);
 					wagons--;
 				}
@@ -97,8 +99,8 @@ public class Train {
 		case 'A':
 			position.setX(position.getX() - wagons);
 
-			if(position.getX() < 0) {
-				while((position.getX() < 0) && (wagons > 0)) {
+			if(position.getX() < 0){
+				while((position.getX() < 0 ) && (wagons > 0)){
 					position.setX(position.getX() + 1);
 					wagons--;
 				}
@@ -109,8 +111,8 @@ public class Train {
 		case 'I':
 			position.setY(position.getY() - wagons);
 
-			if(position.getY() < 0) {
-				while((position.getY() < 0) && (wagons > 0)) {
+			if(position.getY() < 0){
+				while((position.getY() < 0) && (wagons > 0)){
 					position.setY(position.getY() + 1);
 					wagons--;
 				}
@@ -121,8 +123,8 @@ public class Train {
 		case 'D':
 			position.setY(position.getY() + wagons);
 
-			if(position.getY() > 29) {
-				while((position.getY() > 29) && (wagons > 0)) {
+			if(position.getY() > 29){
+				while((position.getY() > 29) && (wagons > 0)){
 					position.setY(position.getY() - 1);
 					wagons--;
 				}
@@ -132,10 +134,12 @@ public class Train {
 		}
 	}
 
-	
+
 	@Override
 	public String toString() {
 		return "Train [direction=" + direction + ", position=" + position + ", wagons=" + wagons + "]";
 	}
+
+
 
 }

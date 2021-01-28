@@ -1,32 +1,44 @@
-package Practica1Final;
+package Practica1Final_2;
+
+import Practica1Final_2.Position;
+import Practica1Final_2.Board;
 
 public class Train {
 	private char direction;
 	private Position position;
 	private int wagons;
-
-	public Train(char direction, Position position, int wagons) {
+	
+	private Board board;
+	private int rows, columns;
+	
+	public Train(char direction, Position  position, int wagons, Board board) {
 		this.direction = direction;
 		this.position = position;
 		this.wagons = wagons;
+		this.board = board;
 	}
 
+	
 	public char getDirection() {
 		return direction;
 	}
 
+	
 	public void setDirection(char direction) {
 		this.direction = direction;
 	}
 
+	
 	public Position getPosition() {
 		return position;
 	}
 
+	
 	public void setPosition(Position position) {
 		this.position = position;
 	}
 
+	
 	public int getWagons() {
 		return wagons;
 	}
@@ -35,13 +47,17 @@ public class Train {
 		this.wagons = wagons;
 	}
 
+	
 	public void move() {
 		int x = position.getX();
 		int y = position.getY();
-
+		
+		rows = board.getRows();
+		columns = board.getColumns();
+		
 		switch (direction) {
 		case 'B':
-			if (x == 29) {
+			if (x == rows-1) {
 				wagons--;
 			} else {
 				position.setX(x + 1);
@@ -67,7 +83,7 @@ public class Train {
 			break;
 
 		case 'D':
-			if (y == 29) {
+			if (y == columns-1) {
 				wagons--;
 			} else {
 				position.setY(y + 1);
@@ -81,12 +97,15 @@ public class Train {
 	public void moveWhenCollision() { 
 		wagons--;
 		
+		rows = board.getRows();
+		columns = board.getColumns();
+		
 		switch (direction) {
 		case 'B':
 			position.setX(position.getX() + wagons);
 
-			if(position.getX() > 29) {
-				while((position.getX() > 29) && (wagons > 0)) {
+			if(position.getX() > rows-1) {
+				while((position.getX() > rows-1) && (wagons > 0)) {
 					position.setX(position.getX() - 1);
 					wagons--;
 				}
@@ -121,8 +140,8 @@ public class Train {
 		case 'D':
 			position.setY(position.getY() + wagons);
 
-			if(position.getY() > 29) {
-				while((position.getY() > 29) && (wagons > 0)) {
+			if(position.getY() > columns-1) {
+				while((position.getY() > columns-1) && (wagons > 0)) {
 					position.setY(position.getY() - 1);
 					wagons--;
 				}
@@ -131,7 +150,6 @@ public class Train {
 			break;
 		}
 	}
-
 	
 	@Override
 	public String toString() {

@@ -1,5 +1,4 @@
-
-package Practica2Final;
+package Practica2Final_2;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -227,6 +226,7 @@ public class ViewCreateBoard extends JFrame {
 				});
 
 				button.addActionListener(controllerCreateBoard);
+				// button.setActionCommand("selectedButton");
 				button.setPreferredSize(new Dimension(30, 30));
 
 				rowIndex = new Integer(i).toString();

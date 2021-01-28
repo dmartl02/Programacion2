@@ -1,12 +1,13 @@
+
 package Practica2Final;
 
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
+
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+
 import javax.swing.JTextField;
 
 public class ViewMenuCreateBoard extends JFrame {
@@ -68,6 +69,7 @@ public class ViewMenuCreateBoard extends JFrame {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 	}
+	
 	
 	public JTextField getTextFieldTrains() {
 		return textFieldTrains;

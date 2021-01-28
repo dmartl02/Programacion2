@@ -1,4 +1,4 @@
-package Practica2Final;
+package Practica2Final_2;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,7 +11,7 @@ import javax.swing.JMenuBar;
 
 import Practica2Final.ControllerInitialMenu;
 
-public class ViewInitialMenu extends JFrame{
+public class ViewInitialMenu extends JFrame {
 	private ControllerInitialMenu controlerInitialMenu;
 	
 	public ViewInitialMenu(ControllerInitialMenu controller) {

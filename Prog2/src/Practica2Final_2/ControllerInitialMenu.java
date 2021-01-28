@@ -1,4 +1,4 @@
-package Practica2Final;
+package Practica2Final_2;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

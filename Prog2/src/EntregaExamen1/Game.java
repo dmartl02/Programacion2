@@ -1,4 +1,4 @@
-package Practica1Final;
+package EntregaExamen1;
 
 import java.util.ArrayList;
 
@@ -12,29 +12,26 @@ public class Game {
 		this.board = board;
 		this.trains = trains;
 	}
-
+	
+	
 	public void start() {
 		int index = 0;
 		Train temp;
 		Position collision;
 		boolean crashed = false;
-
+		
 		//board.printWithTrains(trains);
 		//board.print();
-
+		
 		orderTrains();
 		this.maximumTrains = trains.size();
 
-		while (!trains.isEmpty()) {
+		while(!trains.isEmpty()) {
 			temp = trains.get(index);
-			System.out.println(temp);
 			temp.move();
-			//board.printWithTrains(trains);
-			//board.print();
-
+			
 			collision = new Position(temp.getPosition().getX(), temp.getPosition().getY());
 			crashed = detectCollision(index);
-
 
 			if (crashed) {
 				board.setCollision(collision);
@@ -44,9 +41,9 @@ public class Game {
 				trains.remove(index);
 				this.maximumTrains = trains.size();
 			} else {
-				index++;
+				index ++ ;
 			}
-
+		
 			if (index == maximumTrains) {
 				index = 0;
 			}
@@ -55,102 +52,98 @@ public class Game {
 		board.print();
 	}
 
+
 	private void orderTrains() {
 		ArrayList<Train> orderedTrains = new ArrayList<Train>();
-
-		for (int i = 0; i < trains.size(); i++) {
-			if (trains.get(i).getDirection() == 'B') {
+		
+		for(int i = 0; i<trains.size(); i++) {
+			if(trains.get(i).getDirection() == 'B') {
 				orderedTrains.add(trains.get(i));
 			}
 		}
 
-		for (int i = 0; i < trains.size(); i++) {
-			if (trains.get(i).getDirection() == 'A') {
+		for(int i = 0; i<trains.size(); i++) {
+			if(trains.get(i).getDirection() == 'A') {
 				orderedTrains.add(trains.get(i));
 			}
 		}
 
-		for (int i = 0; i < trains.size(); i++) {
-			if (trains.get(i).getDirection() == 'I') {
+		for(int i = 0; i<trains.size(); i++) {
+			if(trains.get(i).getDirection() == 'I') {
 				orderedTrains.add(trains.get(i));
 			}
 		}
 
-		for (int i = 0; i < trains.size(); i++) {
-			if (trains.get(i).getDirection() == 'D') {
+		for(int i = 0; i<trains.size(); i++) {
+			if(trains.get(i).getDirection() == 'D') {
 				orderedTrains.add(trains.get(i));
 			}
 		}
 
-		trains = orderedTrains;
+		trains = orderedTrains; 
 	}
 
-	
-	public boolean detectCollisionNoMoving(int index) {		
+
+	public boolean detectCollisionNoMoving(int index) {
 		Train temp;
 		Train movingTrain = trains.get(index);
-
-		for (int i = 0; i < trains.size()-1; i++) {
-			if (i != index) {
+		
+		for(int i=0; i< trains.size()-1; i++) {
+			if(i != index) {
 				temp = trains.get(i);
-				
-				if (thereIsATrain(movingTrain.getPosition(), temp)) {
+
+				if(thereIsATrain(movingTrain.getPosition(), temp)) {
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
 
+	
 	public boolean detectCollision(int index) {
 		Train temp;
 		Train movingTrain = trains.get(index);
 
-		for (int i = 0; i < trains.size(); i++) {
-			if (i != index) {
+		for(int i=0; i<trains.size(); i++) {
+			if(i != index) {
 				temp = trains.get(i);
 				
-				if (thereIsATrain(movingTrain.getPosition(), temp)) {
-					
-					movingTrain.moveWhenCollision();
-					temp.moveWhenCollision();
-
+				if(thereIsATrain(movingTrain.getPosition(), temp)) {
+				   movingTrain.moveWhenCollision();
+				   temp.moveWhenCollision();
 					return true;
 				}
 			}
 		}
 
-		if (thereIsCollision(movingTrain.getPosition())) {
-			movingTrain.moveWhenCollision();
+		if(thereIsCollision(movingTrain.getPosition())) {
+		    movingTrain.moveWhenCollision();
 			return true;
 		}
 
 		return false;
 	}
+
 	
-
 	private boolean thereIsATrain(Position movingTrain, Train current) {
-		int movingTrainX = movingTrain.getX();
-		int movingTrainY = movingTrain.getY();
-
 		char currentDirection = current.getDirection();
 		int currentWagons = current.getWagons();
 		Position currentPosition = current.getPosition();
 
+		int movingTrainX = movingTrain.getX();
+		int movingTrainY = movingTrain.getY();
+
 		int currentX = currentPosition.getX();
 		int currentY = currentPosition.getY();
 
-		for (int i = 0; i < currentWagons; i++) {
-			if ((currentX == movingTrainX) && (currentY == movingTrainY)) { 
-				currentPosition.setX(movingTrainX);
-				currentPosition.setY(movingTrainY);
-			
+		for(int i=0; i<currentWagons; i++) {
+			if((currentX == movingTrainX) && (currentY == movingTrainY)) {
 				return true;
-			}
-			
-			switch (currentDirection) {
+			} 
+
+			switch(currentDirection) {
 			case 'B':
 				currentX--;
 				break;
@@ -161,7 +154,7 @@ public class Game {
 
 			case 'I':
 				currentY++;
-				break;
+				break;	
 
 			case 'D':
 				currentY--;
@@ -172,12 +165,35 @@ public class Game {
 		return false;
 	}
 
+
 	private boolean thereIsCollision(Position position) {
-		if (board.getBoard()[position.getX()][position.getY()] == 'X') {
+		if(board.getBoard()[position.getX()][position.getY()] == 'X') {
 			return true;
-		}
+		} 
 
 		return false;
 	}
+
+
+	public boolean isLapFinished(int index) {
+		this.maximumTrains = trains.size();
+		if (index >= maximumTrains ) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	
+	public void lapFinished(int index) {
+		this.maximumTrains = trains.size();
+		for(int i = 0; i < trains.size(); i++) {
+			if(trains.get(i).getWagons() == 0) {
+				trains.remove(i);
+				i--;
+			}
+		}
+	}
+
 
 }

@@ -1,4 +1,4 @@
-package Practica1Final;
+package EntregaExamen1;
 
 public class Position {
 
@@ -29,5 +29,5 @@ public class Position {
 	@Override
 	public String toString() {
 		return "Position [x=" + x + ", y=" + y + "]";
-	}
+	};
 }

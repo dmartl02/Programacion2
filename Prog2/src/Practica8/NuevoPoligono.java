@@ -18,7 +18,7 @@ import java.awt.event.ActionEvent;
 
 public class NuevoPoligono {
 
-	private JFrame frame;
+	public JFrame frame;
 	private JTextField textoNumeroLados;
 	private JButton botonIncrementar;
 	private JButton botonDecrementar;
@@ -32,6 +32,8 @@ public class NuevoPoligono {
 	
 	//Launch the application.
 	public static void main(String[] args) {
+		
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

@@ -1,49 +1,59 @@
-package Practica2Final;
+package Practica2Final_2;
 
 import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
+
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+
 import javax.swing.JTextField;
 
-public class ViewMenuPlayBoard extends JFrame {
-	private ControllerMenuPlayBoard controllerPlayBoardMenu;
+public class ViewMenuCreateBoard extends JFrame {
+	private ControllerMenuCreateBoard controllerCreateBoardMenu;
+	private JTextField textFieldTrains;
 	private JTextField textFieldRows;
 	private JTextField textFieldColumns;
 	
 	
-	public ViewMenuPlayBoard(ControllerMenuPlayBoard controller) {
-		this.controllerPlayBoardMenu = controller;
+	public ViewMenuCreateBoard(ControllerMenuCreateBoard controller) {
+		this.controllerCreateBoardMenu = controller;
 		this.createInitialWindowToPlay();
 	}
 
 	
 	public void createInitialWindowToPlay() {
-		JLabel labelLines = new JLabel();
-		labelLines.setText("Number of lines:");
-		labelLines.setBounds(83, 40, 200, 20);
-		this.add(labelLines);
+		JLabel labelTrains = new JLabel();
+		labelTrains.setText("Number of trains:");
+		labelTrains.setBounds(83, 40, 200, 20);
+		this.add(labelTrains);
+		
+		textFieldTrains = new JTextField();
+		textFieldTrains.setBounds(83, 60, 200, 20);
+		this.add(textFieldTrains);
+		
+		JLabel labelRows = new JLabel();
+		labelRows.setText("Number of rows:");
+		labelRows.setBounds(83, 80, 200, 20);
+		this.add(labelRows);
 		
 		textFieldRows = new JTextField();
-		textFieldRows.setBounds(83, 60, 200, 20);
+		textFieldRows.setBounds(83, 100, 200, 20);
 		this.add(textFieldRows);
 		
 		JLabel labelColumns = new JLabel();
 		labelColumns.setText("Number of columns:");
-		labelColumns.setBounds(83, 80, 200, 20);
+		labelColumns.setBounds(83, 120, 200, 20);
 		this.add(labelColumns);
 		
 		textFieldColumns = new JTextField();
-		textFieldColumns.setBounds(83, 100, 200, 20);
+		textFieldColumns.setBounds(83, 140, 200, 20);
 		this.add(textFieldColumns);
 		
 		JButton buttonAccept = new JButton();
-		buttonAccept.setText("Accept");
+		buttonAccept.setText("OK");
 		buttonAccept.setBounds(133, 175, 100, 50);
-		buttonAccept.addActionListener(controllerPlayBoardMenu);
+		buttonAccept.addActionListener(controllerCreateBoardMenu);
 		buttonAccept.setActionCommand("buttonAccept");
 		this.add(buttonAccept);
 		
@@ -58,15 +68,17 @@ public class ViewMenuPlayBoard extends JFrame {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setVisible(true);
 	}
-
+	
+	
+	public JTextField getTextFieldTrains() {
+		return textFieldTrains;
+	}
 	
 	public JTextField getTextFieldRows() {
 		return textFieldRows;
 	}
 
-	
 	public JTextField getTextFieldColumns() {
 		return textFieldColumns;
 	}
-}
-
+}}

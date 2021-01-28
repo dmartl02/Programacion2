@@ -1,7 +1,6 @@
-package Practica1Final;
+package Practica1Final_2;
 
 public class Position {
-
 	private int x;
 	private int y;
 	
