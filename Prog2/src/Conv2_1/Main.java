@@ -1,8 +1,10 @@
-package Practica1Final;
+package Conv2_1;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import Conv2_1.Position;
 
 public class Main {
 
@@ -10,27 +12,51 @@ public class Main {
 	private static Board board;
 	private static Train train;
 	private static Position position;
-	private static Position positionCataclismo;
 
 	private static char directionCharacter;
-	private static String[] splittedTrain;
+	private static String[] splittedTrain, splittedBoard;
+	private static int rows, columns;
 	private static int numberOfTrains;
 	private static int wagons, positionX, positionY;
-	private static String trainKeyboard;
-	private static char cataclismoCharacter;
-	private static int wagonsCataclismo, positionXCataclismo, positionYCataclismo;
-
-
+	private static String trainKeyboard, boardKeyboard;
+	private static final int MIN_TRAINS = 1;
+	private static final int MIN_ROWS = 10;
+	private static final int MAX_ROWS = 100;
+	private static final int MIN_COLUMNS = 10;
+	private static final int MAX_COLUMNS = 100;
+	
 	public static void main(String[] args) {
 		Scanner keyboard = new Scanner(System.in);
-		
-		board = new Board();
-		
+
 		boolean canPlay = true;
 
 		while (canPlay){
 			trains = new ArrayList<Train>(numberOfTrains);
-
+			
+			boardKeyboard = keyboard.nextLine();
+			splittedBoard = boardKeyboard.split(" ");
+			
+			try {
+				String rowsKeyboard = splittedBoard[0];
+				rows = Integer.parseInt(rowsKeyboard);
+			} catch (NumberFormatException nfe) {
+				System.out.println("Conjunto de trenes incorrecto.");
+				System.out.println();
+				System.exit(0);
+			}
+			
+			try {
+				String columnsKeyboard = splittedBoard[1];
+				columns = Integer.parseInt(columnsKeyboard);
+			} catch (NumberFormatException nfe) {
+				System.out.println("Conjunto de trenes incorrecto.");
+				System.out.println();
+				System.exit(0);
+			}
+			
+			checkNumberOfRows();
+			checkNumberOfColumns();
+		
 			restartGame();
 			
 			Game game = new Game(board, trains);
@@ -38,7 +64,7 @@ public class Main {
 			try {
 				numberOfTrains = keyboard.nextInt();
 			} catch (InputMismatchException ime) {
-				System.out.println("Conjunto de trenes incorrecto.");
+				System.out.println("Conjunto de trenes incorrecto trains not number.");
 				System.out.println();
 				System.exit(0);
 			}
@@ -57,7 +83,7 @@ public class Main {
 					String wagonsKeyboard = splittedTrain[1];
 					wagons = Integer.parseInt(wagonsKeyboard);
 				} catch (IndexOutOfBoundsException iooe) {
-					System.out.println("Conjunto de trenes incorrecto.");
+					System.out.println("Conjunto de trenes incorrecto 2.");
 					System.out.println();
 					System.exit(0);
 				}
@@ -67,45 +93,19 @@ public class Main {
 
 				String positionXKeyboard = splittedTrain[3];
 				positionX = Integer.parseInt(positionXKeyboard);
-				positionX = 29 - positionX;
+				positionX = (rows-1) - positionX;
 				
-				
-				String cataclismoKeyboard = splittedTrain[0];
-				cataclismoCharacter = cataclismoKeyboard.charAt(0);
-				
-				String wagonsCataclismoKeyboard = splittedTrain[1];
-				wagonsCataclismo = Integer.parseInt(wagonsCataclismoKeyboard);
-				
-				String positionYCatKeyboard = splittedTrain[2];
-				positionYCataclismo = Integer.parseInt(positionYCatKeyboard);
-
-				String positionXCatKeyboard = splittedTrain[3];
-				positionXCataclismo = Integer.parseInt(positionXCatKeyboard);
-				positionXCataclismo = 29 - positionXCataclismo;
-
 				position = new Position(positionX, positionY);
-				
-				positionCataclismo = new Position(positionXCataclismo, positionYCataclismo);
-				board.setCataclismo(positionCataclismo);
 				
 				checkDirection();
 				checkNumberOfWagons();
 				checkPosition();
 				checkInsideTheBoard();
 
-			
-				train = new Train(directionCharacter, position, wagons);
+				train = new Train(directionCharacter, position, wagons, board);
 				trains.add(train);
-				
-				//Detect if there are collisions when creating the trains
-				if ((trains.size() > 1) && (game.detectCollisionNoMoving(i))) {
-					System.out.println("Conjunto de trenes incorrecto.");
-					System.out.println();
-					System.exit(0);
-				}
 			}
 			
-			System.out.println();
 			game.start();
 		}
 	}
@@ -113,13 +113,31 @@ public class Main {
 	
 	private static void restartGame() {
 		trains.clear();
-		board = new Board();
+		board = new Board(rows, columns);
 	}
 
 	
+	public static void checkNumberOfRows() {
+		if((rows < MIN_ROWS) || (rows > MAX_ROWS)) {
+			System.out.println("Conjunto de trenes incorrecto rows.");
+			System.out.println();
+			System.exit(0);
+		}	
+	}
+	
+	
+	public static void checkNumberOfColumns() {
+		if((columns < MIN_COLUMNS) || (columns > MAX_COLUMNS)) {
+			System.out.println("Conjunto de trenes incorrecto columns.");
+			System.out.println();
+			System.exit(0);
+		}	
+	}
+	
+	
 	public static void checkNumberOfTrains() {
-		if((numberOfTrains > 10) || (numberOfTrains < 1)) {
-			System.out.println("Conjunto de trenes incorrecto.");
+		if(numberOfTrains < MIN_TRAINS) {
+			System.out.println("Conjunto de trenes incorrecto number of trains.");
 			System.out.println();
 			System.exit(0);
 		}
@@ -127,8 +145,8 @@ public class Main {
 
 	
 	public static void checkDirection() {
-		if((directionCharacter != 'B') && (directionCharacter != 'A') && (directionCharacter != 'I') && (directionCharacter != 'D') && (cataclismoCharacter != 'C')) {
-			System.out.println("Conjunto de trenes incorrecto.");
+		if((directionCharacter != 'B') && (directionCharacter != 'A') && (directionCharacter != 'I') && (directionCharacter != 'D')) {
+			System.out.println("Conjunto de trenes incorrecto direction.");
 			System.out.println();
 			System.exit(0);
 		}
@@ -137,7 +155,7 @@ public class Main {
 	
 	public static void checkNumberOfWagons() {
 		if((wagons < 1) || (wagons > 30)) {
-			System.out.println("Conjunto de trenes incorrecto.");
+			System.out.println("Conjunto de trenes incorrecto wagons.");
 			System.out.println();
 			System.exit(0);
 		}
@@ -145,8 +163,8 @@ public class Main {
 
 	
 	public static void checkPosition() {
-		if((positionX < 0) || (positionX > 29) || (positionY < 0) || (positionY > 29) || (positionXCataclismo < 0) || (positionXCataclismo > 29) || (positionYCataclismo < 0) || (positionYCataclismo > 29)) {
-			System.out.println("Conjunto de trenes incorrecto.");
+		if((positionX < 0) || (positionX > rows-1) || (positionY < 0) || (positionY > columns-1)) {
+			System.out.println("Conjunto de trenes incorrecto position.");
 			System.out.println();
 			System.exit(0);
 		}
@@ -155,29 +173,29 @@ public class Main {
 	
 	public static void checkInsideTheBoard() {
 		if(directionCharacter == 'B'){
-			if((positionX - wagons) > 29) {
-				System.out.println("Conjunto de trenes incorrecto.");
+			if((positionX - wagons) > rows) {
+				System.out.println("Conjunto de trenes incorrecto outside.");
 				System.out.println();
 				System.exit(0);
 			}
 
 		} else if(directionCharacter == 'A'){
 			if((positionX + wagons) < 0) {
-				System.out.println("Conjunto de trenes incorrecto.");
+				System.out.println("Conjunto de trenes incorrecto outside.");
 				System.out.println();
 				System.exit(0);
 			}
 
 		} else if(directionCharacter == 'I'){
 			if((positionY + wagons) < 0 ) {
-				System.out.println("Conjunto de trenes incorrecto.");
+				System.out.println("Conjunto de trenes incorrecto outside.");
 				System.out.println();
 				System.exit(0);
 			}
 
 		} else if(directionCharacter == 'D'){
-			if((positionY - wagons) > 29) {
-				System.out.println("Conjunto de trenes incorrecto.");
+			if((positionY - wagons) > columns) {
+				System.out.println("Conjunto de trenes incorrecto ouside.");
 				System.out.println();
 				System.exit(0);
 			}
@@ -188,25 +206,5 @@ public class Main {
 	public static ArrayList<Train> getTrains() {
 		return trains;
 	}
-	
-	public static Position getPositionCataclismo() {
-		return positionCataclismo;
-	}
-	public static int getWagonsCataclismo() {
-		return wagonsCataclismo;
-	}
 }
 
-/*
-10
-D 9 11 23
-A 8 11 17
-A 5 15 15
-A 5 15 8
-B 9 23 13
-A 6 23 6
-D 9 8 9
-I 13 17 0
-A 12 13 11
-I 5 20 9
-*/

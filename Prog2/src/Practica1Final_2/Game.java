@@ -1,15 +1,12 @@
-package Practica1Final_2;
+package  Practica1Final_2;
 
 import java.util.ArrayList;
-
-import Practica1Final_2.Board;
-import Practica1Final_2.Position;
-import Practica1Final_2.Train;
+import java.util.Arrays;
 
 public class Game {
 
 	private Board board;
-	private ArrayList<Train> trains;
+	private static ArrayList<Train> trains;
 	private int maximumTrains;
 
 	public Game(Board board, ArrayList<Train> trains) {
@@ -20,47 +17,67 @@ public class Game {
 	public void start() {
 		int index = 0;
 		Train temp;
-		Position collision;
-		boolean crashed = false;
-
-//		board.printWithTrains(trains);
-//		board.print();
-
+		
+		
 		orderTrains();
 		this.maximumTrains = trains.size();
-
+		
+		board.setTrainsWithCollisions(trains);
+//		board.setTrains(trains);
+		
+		board.print();
+		
+		
+		/*for (Train train : trains) {
+			if(train.checkInitialCollisionHeads(trains)) {
+				trains.removeAll(trains);
+			}
+			
+			System.out.println(trains);
+		}*/
+		
+		
+		for (Train train : trains) {
+			train.checkInitialCollision();
+		}
+		
 		while (!trains.isEmpty()) {
 			temp = trains.get(index);
 			
-			collision = new Position(temp.getPosition().getX(), temp.getPosition().getY());
-			crashed = detectCollision(index);
-			
-			if (crashed) {
-				board.setCollision(collision);
+			/*if(temp.checkCollisionWithAnotherHead(trains)) {
+				trains.removeAll(trains);
 			}
-
-//			board.printWithTrains(trains);
-//			board.print();
+			*/
 			
 			temp.move();
-			
-//			if (crashed) {
-//				board.setCollision(collision);
-//			}
-			
+
+			board.drawTrain(temp);
+			board.print();
+
 			if (temp.getWagons() <= 0) {
 				trains.remove(index);
 				this.maximumTrains = trains.size();
 			} else {
 				index++;
 			}
-
+			
+			if (!temp.getSubtrains().isEmpty()) {
+				for (int i = 0; i < temp.getSubtrains().size(); i++) {
+					Train subTrain = temp.getSubtrains().get(i);
+					if (subTrain.getWagons() == 0) {
+						temp.getSubtrains().remove(subTrain);
+					}
+				}
+			}
+			
 			if (index == maximumTrains) {
 				index = 0;
 			}
 		}
-
+		
+		
 		board.print();
+		System.out.println();
 	}
 
 	private void orderTrains() {
@@ -93,99 +110,7 @@ public class Game {
 		trains = orderedTrains;
 	}
 
-	public boolean detectCollisionNoMoving(int index) {		
-		Train temp;
-		Train movingTrain = trains.get(index);
-
-		for (int i = 0; i < trains.size()-1; i++) {
-			if (i != index) {
-				temp = trains.get(i);
-				
-				if (thereIsATrain(movingTrain.getPosition(), temp)) {
-					//movingTrain.moveWhenCollision();
-					//temp.moveWhenCollision();
-					return true;
-				}
-			}
-		}
-		
-		return false;
+	public static ArrayList<Train> getTrains() {
+		return trains;
 	}
-	
-	public boolean detectCollision(int index) {
-		Train temp;
-		Train movingTrain = trains.get(index);
-
-		for (int i = 0; i < trains.size(); i++) {
-			if (i != index) {
-				temp = trains.get(i);
-				
-				if (thereIsATrain(movingTrain.getPosition(), temp)) {
-					movingTrain.moveWhenCollision();
-					temp.moveWhenCollision();
-
-					return true;
-				}
-			}
-		}
-
-		if (thereIsCollision(movingTrain.getPosition())) {
-			movingTrain.moveWhenCollision();
-			return true;
-		}
-
-		return false;
-	}
-	
-
-	private boolean thereIsATrain(Position movingTrain, Train current) {
-		int movingTrainX = movingTrain.getX();
-		int movingTrainY = movingTrain.getY();
-
-		char currentDirection = current.getDirection();
-		int currentWagons = current.getWagons();
-		Position currentPosition = current.getPosition();
-
-		int currentX = currentPosition.getX();
-		int currentY = currentPosition.getY();
-
-		for (int i = 0; i < currentWagons; i++) {
-			if ((currentX == movingTrainX) && (currentY == movingTrainY)) { 
-				currentPosition.setX(movingTrainX);
-				currentPosition.setY(movingTrainY);
-			
-				return true;
-			}
-			
-			switch (currentDirection) {
-			case 'B':
-				currentX--;
-				break;
-
-			case 'A':
-				currentX++;
-				break;
-
-			case 'I':
-				currentY++;
-				break;
-
-			case 'D':
-				currentY--;
-				break;
-			}
-		}
-
-		return false;
-	}
-
-	private boolean thereIsCollision(Position position) {
-		if (board.getBoard()[position.getX()][position.getY()] == 'X') {
-			return true;
-		}
-
-		return false;
-	}
-	
 }
-

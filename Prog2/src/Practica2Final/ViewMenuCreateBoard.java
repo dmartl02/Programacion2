@@ -1,4 +1,3 @@
-
 package Practica2Final;
 
 import java.awt.BorderLayout;

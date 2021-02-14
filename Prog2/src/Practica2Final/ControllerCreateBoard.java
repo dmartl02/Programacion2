@@ -26,7 +26,6 @@ public class ControllerCreateBoard implements ActionListener {
 	private ArrayList<Train> trains;
 
 	private char[][] board;
-	//private Integer[][] initialBoard;
 	private int numberOfTrains, rows, columns;
 	private char directionDelete;
 	private int wagonsDelete, rowDelete, columnDelete;
@@ -35,11 +34,12 @@ public class ControllerCreateBoard implements ActionListener {
 	private final int MIN_TRAINS = 1;
 	private static int counterTrains = 0;;
 	private boolean makeMove;
+	private int counterWagons = 0;
 
 	public ControllerCreateBoard(int numberOfTrains, int rows, int columns) {
 		this.numberOfTrains = numberOfTrains;
-		this.rows = rows;
-		this.columns = columns;
+		this.rows = rows+1;
+		this.columns = columns+1;
 		this.initializeBoard();
 
 		this.viewCreateBoard = new ViewCreateBoard(this, rows, columns);
@@ -47,17 +47,24 @@ public class ControllerCreateBoard implements ActionListener {
 		trains = new ArrayList<Train>(numberOfTrains);
 	}
 
-	
+
 	public void initializeBoard() {
 		board = new char[this.rows][this.columns];
+
 		for (int i = 0; i < this.rows; i++) {
 			for (int j = 0; j < this.columns; j++) {
+				board[i][j] = 'W';
+			}
+		}
+
+		for (int i = 1; i < this.rows; i++) {
+			for (int j = 1; j < this.columns; j++) {
 				board[i][j] = '·';
 			}
 		}
 	}
 
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("createNewSimulation")) {
@@ -97,6 +104,11 @@ public class ControllerCreateBoard implements ActionListener {
 				UIManager.put("OptionPane.okButtonText", "OK");
 				JOptionPane.showMessageDialog(noTrainsToMove, "There are no trains to move", "Minimum Trains Warning",
 						JOptionPane.INFORMATION_MESSAGE);
+			} else if(trains.isEmpty()) {
+				JFrame noTrainsToMove = new JFrame();
+				UIManager.put("OptionPane.okButtonText", "OK");
+				JOptionPane.showMessageDialog(noTrainsToMove, "There are no trains to move", "Minimum Trains Warning",
+						JOptionPane.INFORMATION_MESSAGE);
 			} else {
 				makeMove = true;
 			}
@@ -113,8 +125,8 @@ public class ControllerCreateBoard implements ActionListener {
 
 				viewCreateBoard.getTextFieldDirection().setEnabled(false);
 				viewCreateBoard.getTextFieldWagons().setEnabled(false);
-				viewCreateBoard.getTextFieldRow().setEnabled(false);
 				viewCreateBoard.getTextFieldColumn().setEnabled(false);
+				viewCreateBoard.getTextFieldRow().setEnabled(false);
 				viewCreateBoard.getButtonAdd().setEnabled(false);
 			}
 		}
@@ -144,7 +156,7 @@ public class ControllerCreateBoard implements ActionListener {
 			directionDelete = viewCreateBoard.getTextFieldDirectionDelete().getText().charAt(0);
 			wagonsDelete = Integer.parseInt(viewCreateBoard.getTextFieldWagonsDelete().getText());
 			rowDelete = rows - (Integer.parseInt(viewCreateBoard.getTextFieldRowDelete().getText())) - 1;
-			columnDelete = Integer.parseInt(viewCreateBoard.getTextFieldColumnDelete().getText());
+			columnDelete = Integer.parseInt(viewCreateBoard.getTextFieldColumnDelete().getText())  +1 ;
 
 			viewCreateBoard.deleteTrainFromTheBoard();
 
@@ -170,35 +182,28 @@ public class ControllerCreateBoard implements ActionListener {
 		}
 
 		if (e.getActionCommand().equals("run")) {
-			int counterWhite = 0;
-			
-			for (int i = 0; i < this.rows; i++) {
-				for (int j = 0; j < this.columns; j++) {
-					if(viewCreateBoard.getButtonsBoard()[i][j].getBackground() == Color.WHITE) {
-						counterWhite++;
-					}
-				}
-			}
-			
-			JFrame frameWhite = new JFrame();
-			UIManager.put("OptionPane.okButtonText", "OK");
-			JOptionPane.showMessageDialog(frameWhite, "There are " +counterWhite+ " blank spaces in the board.",
-					"Blank Spaces Warning", JOptionPane.INFORMATION_MESSAGE);
-
 			runAutomatic();
 		}
 
 		if (e.getActionCommand().equals("instructions")) {
 			viewCreateBoard.getInstructions();
 		}
+		
+		if (e.getActionCommand().equals("modificacionPractica")) {
+			JFrame frameVerticalWagons = new JFrame();
+			UIManager.put("OptionPane.okButtonText", "OK");
+			JOptionPane.showMessageDialog(frameVerticalWagons, "There are " +counterWagons+ " vertical wagons",
+					"Vertical Wagons Counter", JOptionPane.INFORMATION_MESSAGE);
+		}
 	}
 
-	
+
 	public void addTrain() {		
 		char direction = viewCreateBoard.getTextFieldDirection().getText().charAt(0);
 		int wagons = Integer.parseInt(viewCreateBoard.getTextFieldWagons().getText());
+		int column = Integer.parseInt(viewCreateBoard.getTextFieldColumn().getText()) + 1;
 		int row = rows - (Integer.parseInt(viewCreateBoard.getTextFieldRow().getText())) - 1;
-		int column = Integer.parseInt(viewCreateBoard.getTextFieldColumn().getText());
+		
 		Position position = new Position(row, column);
 
 		if ((direction != 'B') && (direction != 'A') && (direction != 'D') && (direction != 'I')) {
@@ -239,10 +244,11 @@ public class ControllerCreateBoard implements ActionListener {
 				JOptionPane.showMessageDialog(frameOutDown, "One or more wagons are created outside the board.",
 						"Column Warning", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				train = new Train(direction, wagons, position);
+				train = new Train(direction, position, wagons);
 				trains.add(train);
 				orderTrains();
 				counterTrains++;
+				counterWagons = counterWagons + wagons;
 			}
 		}
 
@@ -253,10 +259,11 @@ public class ControllerCreateBoard implements ActionListener {
 				JOptionPane.showMessageDialog(frameOutUp, "One or more wagons are created outside the board.",
 						"Column Warning", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				train = new Train(direction, wagons, position);
+				train = new Train(direction, position, wagons);
 				trains.add(train);
 				orderTrains();
 				counterTrains++;
+				counterWagons = counterWagons + wagons;
 			}
 		}
 
@@ -267,7 +274,7 @@ public class ControllerCreateBoard implements ActionListener {
 				JOptionPane.showMessageDialog(frameOutLeft, "One or more wagons are created outside the board.",
 						"Row Warning", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				train = new Train(direction, wagons, position);
+				train = new Train(direction, position, wagons);
 				trains.add(train);
 				orderTrains();
 				counterTrains++;
@@ -281,7 +288,7 @@ public class ControllerCreateBoard implements ActionListener {
 				JOptionPane.showMessageDialog(frameOutRight, "One or more wagons are created outside the board.",
 						"Row Warning", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				train = new Train(direction, wagons, position);
+				train = new Train(direction, position, wagons);
 				trains.add(train);
 				orderTrains();
 				counterTrains++;
@@ -290,9 +297,9 @@ public class ControllerCreateBoard implements ActionListener {
 
 		viewCreateBoard.setTextFieldDirection();
 		viewCreateBoard.setTextFieldWagons();
-		viewCreateBoard.setTextFieldRow();
 		viewCreateBoard.setTextFieldColumn();
-
+		viewCreateBoard.setTextFieldRow();
+		
 		viewCreateBoard.drawTrain();
 
 		if (counterTrains == numberOfTrains) {
@@ -308,13 +315,11 @@ public class ControllerCreateBoard implements ActionListener {
 			viewCreateBoard.getTextFieldColumn().setEnabled(false);
 			viewCreateBoard.getButtonAdd().setEnabled(false);
 		}
-		
+
 	}
 
-	
-	public void addTrainFromFile(char direction_prmt, int wagons_prmt, Position position_prmt) {
-		System.out.println("Direction: " + direction_prmt + ", wagons: " + wagons_prmt + ", position: " + position_prmt.toString());
-		
+
+	public void addTrainFromFile(char direction_prmt, Position position_prmt, int wagons_prmt) {
 		char direction = direction_prmt;
 		int wagons = wagons_prmt;
 		int row = rows - (position_prmt.getRow()) -1;
@@ -359,7 +364,7 @@ public class ControllerCreateBoard implements ActionListener {
 				JOptionPane.showMessageDialog(frameOutDown, "One or more wagons are created outside the board.",
 						"Column Warning", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				train = new Train(direction, wagons, position);
+				train = new Train(direction, position, wagons);
 				trains.add(train);
 				orderTrains();
 				counterTrains++;
@@ -373,7 +378,7 @@ public class ControllerCreateBoard implements ActionListener {
 				JOptionPane.showMessageDialog(frameOutUp, "One or more wagons are created outside the board.",
 						"Column Warning", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				train = new Train(direction, wagons, position);
+				train = new Train(direction, position, wagons);
 				trains.add(train);
 				orderTrains();
 				counterTrains++;
@@ -387,7 +392,7 @@ public class ControllerCreateBoard implements ActionListener {
 				JOptionPane.showMessageDialog(frameOutLeft, "One or more wagons are created outside the board.",
 						"Row Warning", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				train = new Train(direction, wagons, position);
+				train = new Train(direction, position, wagons);
 				trains.add(train);
 				orderTrains();
 				counterTrains++;
@@ -401,7 +406,7 @@ public class ControllerCreateBoard implements ActionListener {
 				JOptionPane.showMessageDialog(frameOutRight, "One or more wagons are created outside the board.",
 						"Row Warning", JOptionPane.INFORMATION_MESSAGE);
 			} else {
-				train = new Train(direction, wagons, position);
+				train = new Train(direction, position, wagons);
 				trains.add(train);
 				orderTrains();
 				counterTrains++;
@@ -417,58 +422,86 @@ public class ControllerCreateBoard implements ActionListener {
 					"You have reached the maximum amount of trains (" + numberOfTrains + ")", "Maximum Trains Warning",
 					JOptionPane.INFORMATION_MESSAGE);
 
-			viewCreateBoard.getTextFieldDirection().setEnabled(false);
-			viewCreateBoard.getTextFieldWagons().setEnabled(false);
-			viewCreateBoard.getTextFieldRow().setEnabled(false);
-			viewCreateBoard.getTextFieldColumn().setEnabled(false);
-			viewCreateBoard.getButtonAdd().setEnabled(false);
+			/*viewCreateBoard.getTextFieldDirection().setEnabled(false);
+				viewCreateBoard.getTextFieldWagons().setEnabled(false);
+				viewCreateBoard.getTextFieldRow().setEnabled(false);
+				viewCreateBoard.getTextFieldColumn().setEnabled(false);
+				viewCreateBoard.getButtonAdd().setEnabled(false);*/
 		}
-		
+
 	}
 
-	
+
 	public void readFile(File file) {
-		System.out.println("Se va a leer el archivo: ");
 		FileReader fr = null;
 		BufferedReader br = null;
-		
+
 		try {
 			fr = new FileReader(file);
 			br = new BufferedReader(fr);
 			String line;
-			
-			int numberOfTrains = 0, rows = 0, columns = 0, counter = 1;
+
+			int rows = 0, columns = 0, counter = 1;
 			String[] boardDimension = new String[2];
+
+			String[] trains = new String[1];
+			int numberOfTrains = 0;
+
 			ControllerCreateBoard cb = null;
 
 			String[] trainParametres = new String[4];
 			char direction = 0;
 			int wagons = 0;
 			Position position = null;
-			
+
+			String[] collisions = new String[1];
+			int numberOfCollisions = 0;
+
+			String[] collisionPosition = new String[2];
+			int collisionRow = 0, collisionColumn = 0;
+
+
 			while ((line = br.readLine()) != null) { //Read while not null
 				if (counter == 1) { // Board size
 					boardDimension = line.split(" "); 
 					rows = Integer.parseInt(boardDimension[0]);
 					columns = Integer.parseInt(boardDimension[1]);
-					
+
 				} else if (counter == 2) { // Number of trains
+					trains = line.split(" ");
+					numberOfTrains = Integer.parseInt(trains[0]);
 					cb = new ControllerCreateBoard(numberOfTrains, rows, columns);
-					
+
 				} else { 
 					trainParametres = line.split(" "); 
 					direction = trainParametres[0].charAt(0);
 					wagons = Integer.parseInt(trainParametres[1]);
-					position = new Position(Integer.parseInt(trainParametres[2]), Integer.parseInt(trainParametres[3]));
-					cb.addTrainFromFile(direction, wagons, position);
+					int column = Integer.parseInt(trainParametres[2]) + 1;
+					int row = Integer.parseInt(trainParametres[3]);
+					//position = new Position(Integer.parseInt(trainParametres[3]), Integer.parseInt(trainParametres[2]));
+					position = new Position(row, column);
+					cb.addTrainFromFile(direction, position, wagons);
 				}
-				
+
+
+				/*
+					if(counter == numberOfTrains + 2) {
+						collisions = line.split(" ");
+						numberOfCollisions = Integer.parseInt(collisions[0]);
+
+						for(int i = counter; i<=counter+numberOfCollisions; i++) {
+							collisionPosition = line.split(" ");
+							collisionRow = Integer.parseInt(collisions[0]);
+							collisionColumn = Integer.parseInt(collisions[0]);
+						}
+					} */
+
 				counter++;
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 		} finally {
 			try {
 				if (null != fr) {
@@ -480,7 +513,7 @@ public class ControllerCreateBoard implements ActionListener {
 		}
 	}
 
-	
+
 	private void orderTrains() {
 		ArrayList<Train> orderedTrains = new ArrayList<Train>();
 
@@ -511,20 +544,20 @@ public class ControllerCreateBoard implements ActionListener {
 		trains = orderedTrains;
 	}
 
-	
+
 	public void runAutomatic() {
 		int index = 0;
 		boolean crashed = false;
 		int maximumTrains = 0;
 		Position collision;
 		Train temp;
-		
+
 		orderTrains();
 		maximumTrains = trains.size();
 
 		while (!trains.isEmpty()) {
 			temp = trains.get(index);
-			
+
 			collision = new Position(temp.getPosition().getRow(), temp.getPosition().getColumn());
 			crashed = detectCollision(index);
 
@@ -533,11 +566,11 @@ public class ControllerCreateBoard implements ActionListener {
 			}
 
 			temp.move(viewCreateBoard);
-			
+
 			if (temp.getWagons() <= 0) {
 				trains.remove(temp);
 				maximumTrains = trains.size();
-				
+
 			} else {
 				index++;
 			}
@@ -545,9 +578,9 @@ public class ControllerCreateBoard implements ActionListener {
 			if (index == maximumTrains) {
 				index = 0;
 			}
-			
+
 			viewCreateBoard.drawTrain();
-			
+
 			try {
 				Thread.sleep(100);
 			} catch(Exception e) {
@@ -556,7 +589,7 @@ public class ControllerCreateBoard implements ActionListener {
 		}
 	}
 
-	
+
 	public void runManual(int row, int column) {
 		int index = 0;
 		boolean crashed = false;
@@ -573,10 +606,10 @@ public class ControllerCreateBoard implements ActionListener {
 				index = i;
 			}
 		}
-		
+
 		collision = new Position(getTrains().get(index).getPosition().getRow(), getTrains().get(index).getPosition().getColumn());
 		crashed = detectCollision(index);
-		
+
 		if (crashed) {
 			viewCreateBoard.paintCollision(collision);
 		}
@@ -584,7 +617,7 @@ public class ControllerCreateBoard implements ActionListener {
 		if (trains.get(index).getWagons() <= 0) {
 			trains.remove(trains.get(index));
 			maximumTrains = trains.size();
-			
+
 		} else {
 			index++;
 		}
@@ -593,36 +626,36 @@ public class ControllerCreateBoard implements ActionListener {
 			index = 0;
 		}
 	}
-	
-	
+
+
 	public boolean detectCollisionNoMoving(int index) {
 		Train temp;
 		Position movingTrain = trains.get(index-1).getPosition();
-		
+
 		for(int i = 0; i < trains.size(); i++) {
 			if(i != index) {
 				temp = trains.get(i);
-				
+
 				if(thereIsATrain(movingTrain, temp)) {
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
-	
+
+
 	public boolean detectCollision(int index) {
 		Train temp;
 		Train movingTrain = trains.get(index);
-	
+
 		for (int i = 0; i < trains.size(); i++) {
 			if (i != index) {
 				temp = trains.get(i);
-				
+
 				if (thereIsATrain(movingTrain.getPosition(), temp)) {
-					
+
 					movingTrain.moveWhenCollision(viewCreateBoard);
 					temp.moveWhenCollision(viewCreateBoard);
 
@@ -632,21 +665,21 @@ public class ControllerCreateBoard implements ActionListener {
 		}
 
 		/*
-		if (thereIsCollision(movingTrain.getPosition())) {
-			movingTrain.moveWhenCollision(viewCreateBoard);
-			return true;
-		}
-		/**/
+			if (thereIsCollision(movingTrain.getPosition())) {
+				movingTrain.moveWhenCollision(viewCreateBoard);
+				return true;
+			}
+			/**/
 
 		return false;
 	}
-	
-	
+
+
 	private boolean thereIsATrain(Position movingTrain, Train current) {
 		char currentDirection = current.getDirection();
 		int currentWagons = current.getWagons();
 		Position currentPosition = current.getPosition();
-		
+
 		int currentX = currentPosition.getRow();
 		int currentY = currentPosition.getColumn();
 
@@ -682,7 +715,7 @@ public class ControllerCreateBoard implements ActionListener {
 		return false;
 	}
 
-	
+
 	private boolean thereIsCollision(Position position) {
 		if (viewCreateBoard.getButtonsBoard()[position.getRow()][position.getColumn()].getText().charAt(0) == 'X') {
 			return true;
@@ -690,8 +723,8 @@ public class ControllerCreateBoard implements ActionListener {
 
 		return false;
 	}
-	
-	
+
+
 	public ArrayList<Train> getTrains() {
 		return trains;
 	}

@@ -1,4 +1,3 @@
-
 package Practica2Final;
 
 import java.awt.BorderLayout;
@@ -23,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 
 public class ViewCreateBoard extends JFrame {
@@ -34,19 +34,18 @@ public class ViewCreateBoard extends JFrame {
 	private JTextField textFieldDirection, textFieldWagons, textFieldRow, textFieldColumn;
 	private JTextField textFieldDirectionDelete, textFieldWagonsDelete, textFieldRowDelete, textFieldColumnDelete;
 	JButton buttonAdd, buttonDelete;
-	private int counterEmpty = 0;
-	
+	int defaultDismissTimeout;
 
 	public ViewCreateBoard(ControllerCreateBoard controller, int rows, int columns) {
-		this.rows = rows;
-		this.columns = columns;
+		this.rows = rows+1;
+		this.columns = columns+1;
 		this.controllerCreateBoard = controller;
 
 		this.gameWindow = new JFrame();
 		this.createWindowCreateBoard();
 	}
 
-	
+
 	public void createWindowCreateBoard() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menuFile = new JMenu();
@@ -72,6 +71,7 @@ public class ViewCreateBoard extends JFrame {
 		JMenu menuHelp = new JMenu();
 		JMenuItem menuItemInstructions = new JMenuItem();
 		JPanel panel = new JPanel();
+		JMenuItem menuItemModificacion= new JMenuItem();
 
 		menuFile.setText("File");
 		getContentPane().setLayout(new BorderLayout());
@@ -127,7 +127,7 @@ public class ViewCreateBoard extends JFrame {
 		menuItemUnDoMove.addActionListener(controllerCreateBoard);
 		menuItemUnDoMove.setActionCommand("unDoMove");
 		menuMove.add(menuItemUnDoMove);
-		
+
 		menuItemReDoMove.setText("Redo a move");
 		menuItemReDoMove.addActionListener(controllerCreateBoard);
 		menuItemReDoMove.setActionCommand("reDoMove");
@@ -153,12 +153,12 @@ public class ViewCreateBoard extends JFrame {
 
 		menuRun.setText("Run");
 		menuBar.add(menuRun);
-		
+
 		menuItemRunProgram.setText("Run program automatically");
 		menuItemRunProgram.addActionListener(controllerCreateBoard);
 		menuItemRunProgram.setActionCommand("run");
 		menuRun.add(menuItemRunProgram);
-		
+
 		getContentPane().add(menuBar, BorderLayout.NORTH);
 
 		menuHelp.setText("Help");
@@ -168,6 +168,11 @@ public class ViewCreateBoard extends JFrame {
 		menuItemInstructions.addActionListener(controllerCreateBoard);
 		menuItemInstructions.setActionCommand("instructions");
 		menuHelp.add(menuItemInstructions);
+		
+		menuItemModificacion.setText("Modificacion práctica");
+		menuItemModificacion.addActionListener(controllerCreateBoard);
+		menuItemModificacion.setActionCommand("modificacionPractica");
+		menuHelp.add(menuItemModificacion);
 
 		menuBar.add(menuHelp);
 		getContentPane().add(menuBar, BorderLayout.NORTH);
@@ -187,7 +192,7 @@ public class ViewCreateBoard extends JFrame {
 		this.setVisible(true);
 	}
 
-	
+
 	public void createBoard(JPanel panel) {
 		buttonsBoard = new JButton[this.rows][this.columns];
 		String buttonPosition;
@@ -199,27 +204,48 @@ public class ViewCreateBoard extends JFrame {
 				button = new JButton();
 				buttonsBoard[i][j] = button;
 
+
+				if (controllerCreateBoard.getBoard()[i][j] == 'W') {
+					if((i==0) && (j==0)) {
+						button.setBackground(Color.WHITE);
+					} 
+
+					if((i!=0) && (j == 0)) {
+						int goodRow = (rows-1)-i;
+						button.setBackground(Color.WHITE);
+						button.setText(""+ (goodRow) +"");
+					}
+
+					if((i == 0) && (j != 0)) {
+						button.setBackground(Color.WHITE);
+						button.setText(""+ (j-1) +"");
+					}
+				}
+
 				if (controllerCreateBoard.getBoard()[i][j] == '·') {
 					button.setBackground(Color.WHITE);
 				}
 
+
 				button.addMouseListener(new MouseAdapter() {
 					public void mouseEntered(MouseEvent evt) {
-						for (int row = 0; row < rows; row++) {
-							for (int column = 0; column < columns; column++) {
+						for (int row = 1; row < rows; row++) {
+							for (int column = 1; column < columns; column++) {
 								if (buttonsBoard[row][column] == evt.getSource()) {
 									int goodRow = (rows-1)-row;
-									buttonsBoard[row][column].setText("(" + goodRow + ", " + column + ")");
+									defaultDismissTimeout = ToolTipManager.sharedInstance().getDismissDelay();
+									ToolTipManager.sharedInstance().setDismissDelay(60000);
+									buttonsBoard[row][column].setToolTipText("(" + (column-1) + ", " + goodRow + ")");
 								}
 							}
 						}
 					}
 
 					public void mouseExited(MouseEvent evt) {
-						for (int row = 0; row < rows; row++) {
-							for (int column = 0; column < columns; column++) {
+						for (int row = 1; row < rows; row++) {
+							for (int column = 1; column < columns; column++) {
 								if (buttonsBoard[row][column] == evt.getSource()) {
-									buttonsBoard[row][column].setText("");
+									ToolTipManager.sharedInstance().setDismissDelay(defaultDismissTimeout);
 								}
 							}
 						}
@@ -239,18 +265,18 @@ public class ViewCreateBoard extends JFrame {
 		}
 	}
 
-	
+
 	public void modifyBoard() {
 		for (int i = 0; i < this.rows; i++) {
 			for (int j = 0; j < this.columns; j++) {
-				if (controllerCreateBoard.getBoard()[i][j] == 0) {
+				if (controllerCreateBoard.getBoard()[i][j] == '0') {
 					buttonsBoard[i][j].setBackground(Color.WHITE);
 				}
 			}
 		}
 	}
 
-	
+
 	public void addNewTrain() {
 		JFrame windowAddTrain = new JFrame();
 
@@ -272,15 +298,6 @@ public class ViewCreateBoard extends JFrame {
 		textFieldWagons.setBounds(83, 80, 200, 20);
 		windowAddTrain.getContentPane().add(textFieldWagons);
 
-		JLabel labelRowAdd = new JLabel();
-		labelRowAdd.setText("Initial row:");
-		labelRowAdd.setBounds(83, 100, 200, 20);
-		windowAddTrain.getContentPane().add(labelRowAdd);
-
-		textFieldRow = new JTextField();
-		textFieldRow.setBounds(83, 120, 200, 20);
-		windowAddTrain.getContentPane().add(textFieldRow);
-
 		JLabel labelColumnAdd = new JLabel();
 		labelColumnAdd.setText("Initial column:");
 		labelColumnAdd.setBounds(83, 140, 200, 20);
@@ -289,6 +306,15 @@ public class ViewCreateBoard extends JFrame {
 		textFieldColumn = new JTextField();
 		textFieldColumn.setBounds(83, 160, 200, 20);
 		windowAddTrain.getContentPane().add(textFieldColumn);
+
+		JLabel labelRowAdd = new JLabel();
+		labelRowAdd.setText("Initial row:");
+		labelRowAdd.setBounds(83, 100, 200, 20);
+		windowAddTrain.getContentPane().add(labelRowAdd);
+
+		textFieldRow = new JTextField();
+		textFieldRow.setBounds(83, 120, 200, 20);
+		windowAddTrain.getContentPane().add(textFieldRow);
 
 		buttonAdd = new JButton();
 		buttonAdd.setText("Add train");
@@ -309,26 +335,27 @@ public class ViewCreateBoard extends JFrame {
 		windowAddTrain.setVisible(true);
 	}
 
-	
+
 	public void drawTrain() {
 		int x;
 		int y;
-		
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < columns; j++) {
-				if(buttonsBoard[i][j].getBackground() != Color.BLACK) {
+
+		for (int i = 0; i < this.rows; i++) {
+			for (int j = 0; j < this.columns; j++) {
+
+				if((buttonsBoard[i][j].getBackground() != Color.BLACK) && (controllerCreateBoard.getBoard()[i][j] != 'W')) {
 					buttonsBoard[i][j].setBackground(Color.WHITE);	
 					buttonsBoard[i][j].setText("");
 				}
 			}
 		}
-		
+
 		for (int i = 0; i < controllerCreateBoard.getTrains().size(); i++) {
 			x = controllerCreateBoard.getTrains().get(i).getPosition().getRow();
 			y = controllerCreateBoard.getTrains().get(i).getPosition().getColumn();
-		
+
 			int z = 0;
-			
+
 			if ((controllerCreateBoard.getTrains().get(i).getDirection() == 'B') && (controllerCreateBoard.getTrains().get(i).getWagons() != 0)) {
 				while (z < controllerCreateBoard.getTrains().get(i).getWagons()) {
 					buttonsBoard[x-z][y].setBackground(Color.RED);
@@ -364,7 +391,7 @@ public class ViewCreateBoard extends JFrame {
 		}
 	}
 
-	
+
 	public void deleteTrain() {
 		JFrame windowDeleteTrain = new JFrame();
 
@@ -423,7 +450,7 @@ public class ViewCreateBoard extends JFrame {
 		windowDeleteTrain.setVisible(true);
 	}
 
-	
+
 	public void deleteTrainFromTheBoard() {
 		for (int i = 0; i < controllerCreateBoard.getTrains().size(); i++) {
 			int x = controllerCreateBoard.getTrains().get(i).getPosition().getRow();
@@ -489,23 +516,23 @@ public class ViewCreateBoard extends JFrame {
 						buttonsBoard[x][yTail + controllerCreateBoard.getTrains().get(i).getWagons() - j].setText("");
 					}
 				}
-				
+
 				controllerCreateBoard.getTrains().remove(controllerCreateBoard.getTrains().get(i));
 			}
 		}
 	}
-		
-	
+
+
 	public void paintCollision(Position position) {
 		int row = position.getRow();
 		int column = position.getColumn();
-		
+
 		buttonsBoard[row][column].setBackground(Color.BLACK);
 		buttonsBoard[row][column].setText("X");
 		buttonsBoard[row][column].setForeground(Color.WHITE);
 	}
-	
-	
+
+
 	public void moveWhenClicked(int row, int column) {
 		int chosenTrain = -1;
 
@@ -524,21 +551,21 @@ public class ViewCreateBoard extends JFrame {
 					controllerCreateBoard.getTrains().get(chosenTrain).getPosition().setRow(row + 1);
 					buttonsBoard[row][column].setBackground(Color.RED);
 				}
-			
+
 				break;
-			
+
 			case 'A': 
-				if (row == 0) { 
+				if (row == 1) { 
 					controllerCreateBoard.getTrains().get(chosenTrain).setWagons(controllerCreateBoard.getTrains().get(chosenTrain).getWagons()-1);
 				} else {
 					controllerCreateBoard.getTrains().get(chosenTrain).getPosition().setRow(row - 1);
 					buttonsBoard[row][column].setBackground(Color.YELLOW);
 				}
-				
+
 				break;
 
 			case 'I': 
-				if (column == 0) { 
+				if (column == 1) { 
 					controllerCreateBoard.getTrains().get(chosenTrain).setWagons(controllerCreateBoard.getTrains().get(chosenTrain).getWagons()-1);
 				} else {
 					controllerCreateBoard.getTrains().get(chosenTrain).getPosition().setColumn(column -1);
@@ -562,8 +589,8 @@ public class ViewCreateBoard extends JFrame {
 			drawTrain();
 		}
 	}
-	
-	
+
+
 	public void getInstructions() {
 		JFrame windowInstructions = new JFrame();
 
@@ -602,12 +629,12 @@ public class ViewCreateBoard extends JFrame {
 		text.append("\n");
 		text.append("SALIR DEL PROGRAMA\n");
 		text.append("Para salir del programa, seleccione la opción Exit dentro del menú File.\n");
-		
+
 		text.setEditable(false);
 		JScrollPane displacement = new JScrollPane(text);
 		panel.add(displacement, BorderLayout.CENTER);
 		getContentPane().add(panel);
-		
+
 		JMenuBar menuBarMenu = new JMenuBar();
 		windowInstructions.getContentPane().setLayout(new BorderLayout());
 
@@ -621,7 +648,7 @@ public class ViewCreateBoard extends JFrame {
 		windowInstructions.setVisible(true);
 	}
 
-	
+
 	public JFrame getGameWindow() {
 		return gameWindow;
 	}
@@ -713,11 +740,11 @@ public class ViewCreateBoard extends JFrame {
 	public JButton getButtonDelete() {
 		return buttonDelete;
 	}
-	
+
 	public int getRows(){
 		return rows;
 	}
-	
+
 	public int getColumns(){
 		return columns;
 	}

@@ -14,7 +14,6 @@ public class ControllerMenuCreateBoard implements ActionListener{
 	private final int MIN_COLUMNS = 10;
 	private final int MAX_COLUMNS = 100;
 	private final int MIN_TRAINS = 1;
-	//private final int MAX_TRAINS = 10;
 	private ViewMenuCreateBoard viewCreateBoardMenu;
 
 	public ControllerMenuCreateBoard() { 

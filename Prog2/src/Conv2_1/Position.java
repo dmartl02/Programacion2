@@ -1,7 +1,6 @@
-package EntregaExamen1;
+package Conv2_1;
 
 public class Position {
-
 	private int x;
 	private int y;
 	
@@ -29,5 +28,5 @@ public class Position {
 	@Override
 	public String toString() {
 		return "Position [x=" + x + ", y=" + y + "]";
-	};
+	}
 }

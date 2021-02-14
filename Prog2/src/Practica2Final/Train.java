@@ -1,43 +1,54 @@
-
 package Practica2Final;
 
+import java.util.ArrayList;
+
+import Practica2Final.Position;
+import Practica2Final.Train;
+
 public class Train {
-	private ViewCreateBoard viewCreateBoard;
-	private ControllerCreateBoard controllerCreateBoard;
-	
 	private char direction;
 	private Position position;
 	private int wagons;
+	
+	private int rows, columns;
 
-	public Train(char direction, int wagons, Position position) {
+	public Train(char direction, Position  position, int wagons) {
 		this.direction = direction;
-		this.wagons = wagons;
 		this.position = position;
+		this.wagons = wagons;
+
 	}
+
 
 	public char getDirection() {
 		return direction;
 	}
 
+
 	public void setDirection(char direction) {
 		this.direction = direction;
 	}
+
 
 	public Position getPosition() {
 		return position;
 	}
 
+
 	public void setPosition(Position position) {
 		this.position = position;
 	}
+
 
 	public int getWagons() {
 		return wagons;
 	}
 
+	
 	public void setWagons(int wagons) {
 		this.wagons = wagons;
 	}
+
 	
 	public void move(ViewCreateBoard viewCreateBoard) {
 		int row = position.getRow();
@@ -54,7 +65,7 @@ public class Train {
 			break;
 
 		case 'A':
-			if (row == 0) {
+			if (row == 1) {
 				wagons--;
 			} else {
 				position.setRow(row - 1);
@@ -62,7 +73,7 @@ public class Train {
 			break;
 
 		case 'I':
-			if (column == 0) {
+			if (column == 1) {
 				wagons--;
 			} else {
 				position.setColumn(column - 1);
@@ -80,6 +91,7 @@ public class Train {
 			break;
 		}
 	}
+	
 	
 	public void moveWhenCollision(ViewCreateBoard viewCreateBoard) {
 		wagons--;
@@ -134,9 +146,10 @@ public class Train {
 			break;
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Train [direction=" + direction + ", position=" + position + ", wagons=" + wagons + "]";
 	}
+
 }

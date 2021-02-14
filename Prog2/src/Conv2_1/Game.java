@@ -1,6 +1,10 @@
-package Practica1Final;
+package Conv2_1;
 
 import java.util.ArrayList;
+
+import Conv2_1.Board;
+import Conv2_1.Position;
+import Conv2_1.Train;
 
 public class Game {
 
@@ -19,27 +23,28 @@ public class Game {
 		Position collision;
 		boolean crashed = false;
 
-		//board.printWithTrains(trains);
-		//board.print();
+//		board.printWithTrains(trains);
+//		board.print();
 
 		orderTrains();
 		this.maximumTrains = trains.size();
 
 		while (!trains.isEmpty()) {
 			temp = trains.get(index);
-			System.out.println(temp);
-			temp.move();
-			//board.printWithTrains(trains);
-			//board.print();
-
+			
 			collision = new Position(temp.getPosition().getX(), temp.getPosition().getY());
+
 			crashed = detectCollision(index);
-
-
+			
 			if (crashed) {
 				board.setCollision(collision);
 			}
 
+			board.printWithTrains(trains);
+			board.print();
+			
+			temp.move();
+			
 			if (temp.getWagons() <= 0) {
 				trains.remove(index);
 				this.maximumTrains = trains.size();
@@ -85,7 +90,6 @@ public class Game {
 		trains = orderedTrains;
 	}
 
-	
 	public boolean detectCollisionNoMoving(int index) {		
 		Train temp;
 		Train movingTrain = trains.get(index);
@@ -95,6 +99,8 @@ public class Game {
 				temp = trains.get(i);
 				
 				if (thereIsATrain(movingTrain.getPosition(), temp)) {
+					//movingTrain.moveWhenCollision();
+					//temp.moveWhenCollision();
 					return true;
 				}
 			}
@@ -103,7 +109,6 @@ public class Game {
 		return false;
 	}
 	
-
 	public boolean detectCollision(int index) {
 		Train temp;
 		Train movingTrain = trains.get(index);
@@ -113,10 +118,8 @@ public class Game {
 				temp = trains.get(i);
 				
 				if (thereIsATrain(movingTrain.getPosition(), temp)) {
-					
 					movingTrain.moveWhenCollision();
 					temp.moveWhenCollision();
-
 					return true;
 				}
 			}
@@ -124,13 +127,13 @@ public class Game {
 
 		if (thereIsCollision(movingTrain.getPosition())) {
 			movingTrain.moveWhenCollision();
+//			movingTrain.setWagons(movingTrain.getWagons()-1);
 			return true;
 		}
 
 		return false;
 	}
 	
-
 	private boolean thereIsATrain(Position movingTrain, Train current) {
 		int movingTrainX = movingTrain.getX();
 		int movingTrainY = movingTrain.getY();
@@ -146,7 +149,7 @@ public class Game {
 			if ((currentX == movingTrainX) && (currentY == movingTrainY)) { 
 				currentPosition.setX(movingTrainX);
 				currentPosition.setY(movingTrainY);
-			
+				
 				return true;
 			}
 			
@@ -173,11 +176,13 @@ public class Game {
 	}
 
 	private boolean thereIsCollision(Position position) {
-		if (board.getBoard()[position.getX()][position.getY()] == 'X') {
+		if(board.getBoard()[position.getX()][position.getY()] == 'X') {
 			return true;
 		}
-
+		
+		
+		
 		return false;
 	}
-
+	
 }
